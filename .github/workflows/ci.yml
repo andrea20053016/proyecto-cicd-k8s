@@ -1,0 +1,35 @@
+name: CI - Build Test Push
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-test-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Login to Azure Container Registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: acrcicddemo18093.azurecr.io
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+
+    - name: Build API
+      run: docker build -t acrcicddemo18093.azurecr.io/api:latest ./api
+
+    - name: Test API
+      run: |
+        docker run --rm acrcicddemo18093.azurecr.io/api:latest npm test
+
+    - name: Build Worker
+      run: docker build -t acrcicddemo18093.azurecr.io/worker:latest ./worker
+
+    - name: Push images
+      run: |
+        docker push acrcicddemo18093.azurecr.io/api:latest
+        docker push acrcicddemo18093.azurecr.io/worker:latest
