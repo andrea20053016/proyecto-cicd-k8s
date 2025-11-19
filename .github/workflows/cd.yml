@@ -1,0 +1,17 @@
+name: CD Deploy to AKS
+on:
+  push:
+    branches: [ main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Get AKS Credentials
+        run: az aks get-credentials -g rg-cicd-demo -n aks-cicd-demo --overwrite-existing
+      - name: Deploy to Kubernetes
+        run: kubectl apply -k k8s/
