@@ -5,19 +5,23 @@ metadata:
   namespace: prod
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: api
   template:
     metadata:
       labels:
         app: api
     spec:
-      # AÑADE ESTA SECCIÓN
+      # --- INICIO DE LA CORRECCIÓN ---
       imagePullSecrets:
         - name: acr-secret
-      # FIN DE LA SECCIÓN
+      # --- FIN DE LA CORRECCIÓN ---
       containers:
         - name: api
           image: acrcicddemo18093.azurecr.io/api:latest
-          ports:        - containerPort: 80
+          ports:
+            - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
@@ -25,9 +29,10 @@ metadata:
   name: api-service
   namespace: prod
 spec:
-  type: LoadBalancer
+  # Corregido: 'Load Balancer' a 'LoadBalancer' [cite: 235]
+  type: LoadBalancer 
   selector:
     app: api
   ports:
-  - port: 80
-    targetPort: 80
+    - port: 80
+      targetPort: 80
