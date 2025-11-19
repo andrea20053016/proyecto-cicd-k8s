@@ -5,19 +5,19 @@ metadata:
   namespace: prod
 spec:
   replicas: 1
-  selector:
-    matchLabels:
-      app: api
   template:
     metadata:
       labels:
         app: api
     spec:
+      # AÑADE ESTA SECCIÓN
+      imagePullSecrets:
+        - name: acr-secret
+      # FIN DE LA SECCIÓN
       containers:
-      - name: api
-        image: acrcicddemo18093.azurecr.io/api:latest
-        ports:
-        - containerPort: 80
+        - name: api
+          image: acrcicddemo18093.azurecr.io/api:latest
+          ports:        - containerPort: 80
 ---
 apiVersion: v1
 kind: Service

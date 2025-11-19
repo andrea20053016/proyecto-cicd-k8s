@@ -5,14 +5,15 @@ metadata:
   namespace: prod
 spec:
   replicas: 1
-  selector:
-    matchLabels:
-      app: worker
   template:
     metadata:
       labels:
         app: worker
     spec:
+      # AÑADE ESTA SECCIÓN
+      imagePullSecrets:
+        - name: acr-secret
+      # FIN DE LA SECCIÓN
       containers:
-      - name: worker
-        image: acrcicddemo18093.azurecr.io/worker:latest
+        - name: worker
+          image: acrcicddemo18093.azurecr.io/worker:latest
